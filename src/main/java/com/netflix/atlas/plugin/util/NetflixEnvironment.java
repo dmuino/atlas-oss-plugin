@@ -26,8 +26,9 @@ import java.net.UnknownHostException;
  * available when running on a cloud instance.
  */
 public final class NetflixEnvironment {
-
+    /** Default zone. */
     public static final String DC_ZONE = "us-nflx-1a";
+
     private static final String OWNER = "EC2_OWNER_ID";
     private static final String AMI = "EC2_AMI_ID";
     private static final String VM_TYPE = "EC2_INSTANCE_TYPE";
@@ -51,7 +52,9 @@ public final class NetflixEnvironment {
 
     private static String firstNotNull(String... vs) {
         for (String v : vs) {
-            if (v != null) return v;
+            if (v != null) {
+                return v;
+            }
         }
         return null;
     }

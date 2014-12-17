@@ -16,8 +16,18 @@
 
 package com.netflix.atlas.plugin;
 
+/**
+ * A way to get a {@link RollupConfig}.
+ */
 public interface RollupConfigurator {
+    /**
+     * Get a {@link com.netflix.atlas.plugin.RollupConfig}.
+     */
     RollupConfig getRollupConfig();
 
+    /**
+     * Whether metrics that have not matched any rules in the {@link RollupConfig}
+     * will be dropped (true) or preserved (false).
+     */
     boolean isDropByDefault();
 }

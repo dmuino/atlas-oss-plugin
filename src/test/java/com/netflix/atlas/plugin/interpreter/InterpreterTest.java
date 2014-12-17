@@ -100,7 +100,7 @@ public class InterpreterTest {
         String expr = ":false,:sum,1,:add";
         Context context = execute(expr);
         Deque<Object> expected = new ArrayDeque<>();
-        expected.push(ConstantExpression.NaN);
+        expected.push(ConstantExpression.NAN);
         assertEquals(context.getStack(), expected);
         expected.clear();
 
@@ -113,7 +113,7 @@ public class InterpreterTest {
         // nan + nan
         expr = ":false,:count,:false,:avg,:add";
         context = execute(expr);
-        expected.push(ConstantExpression.NaN);
+        expected.push(ConstantExpression.NAN);
         assertEquals(context.getStack(), expected);
     }
 

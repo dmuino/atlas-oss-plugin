@@ -59,6 +59,8 @@ abstract class BaseAtlasMetricObserver implements MetricObserver {
     private static final Tag ATLAS_GAUGE_TAG = new BasicTag("atlas.dstype", "gauge");
     private static final UpdateTasks NO_TASKS = new UpdateTasks(0, null, -1L);
     private static final int HTTP_OK = 200;
+    private static final int PERCENTAGE = 100;
+    private static final int MAX_PERC_TO_SEND = 90;
     private final PluginConfig config;
     private final RollupPolicy rollupPolicy;
     private final long sendTimeoutMs; // in milliseconds
@@ -88,7 +90,7 @@ abstract class BaseAtlasMetricObserver implements MetricObserver {
     BaseAtlasMetricObserver(PluginConfig config, RollupConfigurator rollupConfigurator, int pollerIdx) {
         this.config = config;
         this.stepMs = Pollers.getPollingIntervals().get(pollerIdx);
-        this.sendTimeoutMs = stepMs * 9 / 10;
+        this.sendTimeoutMs = stepMs * MAX_PERC_TO_SEND / PERCENTAGE;
         commonTags = createCommonTagListFromEnvironment();
         pushQueue = new LinkedBlockingQueue<>(config.getPushQueueSize());
         rollupPolicy = new RollupPolicy(rollupConfigurator);

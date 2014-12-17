@@ -43,6 +43,11 @@ public class RollupPolicy {
     private final Counter metricsRaw = Monitors.newCounter("metricsRaw");
     private final Counter metricsProcessed = Monitors.newCounter("metricsProcessed");
 
+    /**
+     * Creates a new instance of a rollup policy with a given configurator.
+     * @param configurator A {@link RollupConfigurator} used to get
+     *                     the configuration for this policy.
+     */
     public RollupPolicy(RollupConfigurator configurator) {
         this.configurator = configurator;
     }
@@ -157,6 +162,11 @@ public class RollupPolicy {
         return new Metric(sample.getConfig(), sample.getTimestamp(), res);
     }
 
+    /**
+     * Apply this policy to a given {@link java.util.List} of metrics.
+     * @param metrics {@link java.util.List} of metrics.
+     * @return The resulting metrics after applying this policy.
+     */
     public List<Metric> rollup(List<Metric> metrics) {
         RollupConfig rollupConfig = configurator.getRollupConfig();
 
@@ -189,8 +199,9 @@ public class RollupPolicy {
                 Set<String> tags = ImmutableSet.copyOf(rule.getTags());
                 MonitorConfig metricConfig = metric.getConfig();
                 if (rule.getQuery().apply(metricConfig)) {
-                    MonitorConfig newConfig = rule.isKeep() ?
-                            keepTags(metricConfig, tags) : dropTags(metricConfig, tags);
+                    MonitorConfig newConfig = rule.isKeep()
+                            ? keepTags(metricConfig, tags)
+                            : dropTags(metricConfig, tags);
                     // only create a new metric if we got a different config
                     Metric newMetric = newConfig == metricConfig ? metric
                             : new Metric(newConfig, metric.getTimestamp(), metric.getValue());

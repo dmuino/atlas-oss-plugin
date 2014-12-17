@@ -65,6 +65,9 @@ public final class Strings {
         URI_ESCAPES['{'] = hex('{');
     }
 
+    /**
+     * Whether the given {@link String} is null or empty.
+     */
     public static boolean isNotEmpty(String s) {
         return s != null && !s.isEmpty();
     }

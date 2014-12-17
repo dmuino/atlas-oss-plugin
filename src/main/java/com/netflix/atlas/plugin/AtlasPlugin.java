@@ -51,6 +51,9 @@ public class AtlasPlugin {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AtlasPlugin.class);
     private static final long MIN_HEARTBEAT = 30;
+    private static final long TIME_TO_SEND_MS = 2000L;
+    private static final int DELAY_PERC = 90;
+    private static final int PERCENT = 100;
 
     /**
      * ExecutorService used for critical metrics and main poller. Extra pollers added by the user
@@ -61,7 +64,6 @@ public class AtlasPlugin {
     private final PluginConfig config;
     private final MetricObserver observer;
     private final AtlasObservers atlasObserver;
-    private final PushManager pushManager = new PushManager();
     private final MetricFilter filter;
 
     private MetricPoller thePoller = null;
@@ -71,7 +73,8 @@ public class AtlasPlugin {
      */
     public AtlasPlugin(final PluginConfig config) {
         this.config = config;
-        atlasObserver = new AtlasObservers(config, new AtlasMetricObserver(config), pushManager);
+        atlasObserver = new AtlasObservers(config, new AtlasMetricObserver(config),
+                new PushManager());
         observer = getObserver();
         filter = new QueryMetricFilter(config.getFilterExpr());
 
@@ -89,7 +92,7 @@ public class AtlasPlugin {
     }
 
     private MetricObserver getObserver() {
-        long interval = Pollers.getPollingIntervals().get(0) / 1000L; // in seconds
+        long interval = TimeUnit.MILLISECONDS.toSeconds(Pollers.getPollingIntervals().get(0));
         long heartbeat = interval * 2;
         if (heartbeat < MIN_HEARTBEAT) {
             heartbeat = MIN_HEARTBEAT;
@@ -102,6 +105,13 @@ public class AtlasPlugin {
     private void addPoller(MetricPoller poller, long delay, TimeUnit unit) {
         PollRunnable task = new PollRunnable(poller, filter, true, ImmutableList.of(observer));
         executor.scheduleWithFixedDelay(task, 0L, delay, unit);
+    }
+
+    /**
+     * Get 90% of the time expressed in ms, and convert it to seconds.
+     */
+    private static long delaySecondsFor(long ms) {
+        return TimeUnit.MILLISECONDS.toSeconds(ms * DELAY_PERC / PERCENT);
     }
 
     /**
@@ -122,7 +132,7 @@ public class AtlasPlugin {
         pollers.add(jvmPoller);
 
         thePoller = new CompositePoller(pollers);
-        final long delayForMainPoller = Pollers.getPollingIntervals().get(0) * 9 / 10000L; // in seconds
+        final long delayForMainPoller = delaySecondsFor(Pollers.getPollingIntervals().get(0));
         addPoller(thePoller, delayForMainPoller, TimeUnit.SECONDS);
         registry.register(Monitors.newObjectMonitor(observer));
 
@@ -135,7 +145,7 @@ public class AtlasPlugin {
             List<Metric> metrics = thePoller.poll(filter, true);
             LOGGER.info("Scheduling {} metrics to be sent by our main observer.", metrics.size());
             observer.update(metrics);
-            Thread.sleep(2000L);
+            Thread.sleep(TIME_TO_SEND_MS);
             LOGGER.info("Sent ", metrics.size());
         } catch (Throwable t) {
             LOGGER.warn("failed to send metrics to our main observer", t);

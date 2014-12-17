@@ -21,9 +21,10 @@ import com.netflix.servo.monitor.MonitorConfig;
 import java.util.Map;
 
 /**
- * A query that always fails
+ * A query that always fails.
  */
 public enum FalseQuery implements Query {
+    /** Singleton representing a query that always fails. */
     INSTANCE;
 
     @Override

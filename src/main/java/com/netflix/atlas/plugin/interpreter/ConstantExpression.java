@@ -28,7 +28,7 @@ public final class ConstantExpression implements ValueExpression {
     /**
      * Not a number.
      */
-    public static final ConstantExpression NaN = new ConstantExpression(Double.NaN);
+    public static final ConstantExpression NAN = new ConstantExpression(Double.NaN);
     /**
      * A constant expression that represents true.
      */
@@ -58,7 +58,7 @@ public final class ConstantExpression implements ValueExpression {
      */
     public static ConstantExpression from(double val) {
         if (Double.isNaN(val)) {
-            return NaN;
+            return NAN;
         } else {
             return new ConstantExpression(val);
         }

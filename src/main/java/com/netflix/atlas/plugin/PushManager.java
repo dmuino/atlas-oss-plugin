@@ -23,6 +23,7 @@ import com.netflix.servo.Metric;
 import com.netflix.servo.annotations.DataSourceType;
 import com.netflix.servo.monitor.Counter;
 import com.netflix.servo.monitor.MonitorConfig;
+import com.netflix.servo.monitor.Pollers;
 import com.netflix.servo.tag.Tag;
 import com.netflix.servo.tag.TagList;
 import org.slf4j.Logger;
@@ -34,7 +35,7 @@ import java.util.Map;
 
 final class PushManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(PushManager.class);
-    private static final long POLLING_INTERVAL_MS = 60 * 1000L;
+    private static final long POLLING_INTERVAL_MS = Pollers.getPollingIntervals().get(0);
     private static final Tag RATE_TAG = DataSourceType.RATE;
     private static final List<Metric> EMPTY = ImmutableList.of();
 
@@ -130,9 +131,11 @@ final class PushManager {
     }
 
     private static class CounterCache extends LinkedHashMap<MonitorConfig, CounterValue> {
+        //CHECKSTYLE IGNORE MagicNumber
         CounterCache() {
             super(16, 0.75f, true);
         }
+        //CHECKSTYLE END IGNORE
 
         @Override
         protected boolean removeEldestEntry(Map.Entry<MonitorConfig, CounterValue> eldest) {

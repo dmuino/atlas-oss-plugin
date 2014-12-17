@@ -44,12 +44,12 @@ final class ValueValueRelOp implements ValueExpression {
             ConstantExpression ca = (ConstantExpression) a;
             ConstantExpression cb = (ConstantExpression) b;
             return ConstantExpression.from(op.apply(ca.getValue(), cb.getValue()));
-        } else if (a.equals(ConstantExpression.NaN) || b.equals(ConstantExpression.NaN)) {
+        } else if (a.equals(ConstantExpression.NAN) || b.equals(ConstantExpression.NAN)) {
             if (op != BinOp.ADD) {
                 // NaN <op> Number -> NaN (except :add which treats NaN as 0)
-                return ConstantExpression.NaN;
+                return ConstantExpression.NAN;
             } else {
-                return a.equals(ConstantExpression.NaN) ? b : a;
+                return a.equals(ConstantExpression.NAN) ? b : a;
             }
         } else {
             return new ValueValueRelOp(a, b, op);

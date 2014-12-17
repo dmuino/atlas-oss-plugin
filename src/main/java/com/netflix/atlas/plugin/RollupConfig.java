@@ -34,11 +34,11 @@ import java.util.List;
  * Configuration for doing Rollups.
  */
 public class RollupConfig {
-    private static final ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectMapper MAPPER = new ObjectMapper();
     private final List<Rule> rules;
 
     /**
-     * Create a rollup config from a list of {@link Rule}
+     * Create a rollup config from a list of {@link Rule}.
      */
     public RollupConfig(List<Rule> rules) {
         this.rules = Preconditions.checkNotNull(rules);
@@ -53,11 +53,14 @@ public class RollupConfig {
     }
 
     /**
-     * Create a rollup config that will preserve metrics matching 'query'. For these metrics only the tags in
-     * the 'tagsToKeep' parameter will be preserved. Collisions will be handled by summing the values of the colliding metrics.
+     * Create a rollup config that will preserve metrics matching 'query'. For these metrics only
+     * the tags in the 'tagsToKeep' parameter will be preserved. Collisions will be handled by
+     * summing the values of the colliding metrics.
      *
-     * @param query      A string representing an atlas query. For example: <code>"name,ribbon,:re"</code>
-     * @param tagsToKeep List of tag keys to keep. For example: <code>ImmutableList.of("client", "status")</code>
+     * @param query A string representing an atlas query.
+     *              For example: <code>"name,ribbon,:re"</code>
+     * @param tagsToKeep List of tag keys to keep.
+     *                   For example: <code>ImmutableList.of("client", "status")</code>
      * @return A rollup config.
      */
     public static RollupConfig sumKeepingTags(String query, List<String> tagsToKeep) {
@@ -66,11 +69,14 @@ public class RollupConfig {
     }
 
     /**
-     * Create a rollup config that will preserve metrics matching 'query'. For these metrics the tags in
-     * the 'tagsToDrop' parameter will be removed. Collisions will be handled by summing the values of the colliding metrics.
+     * Create a rollup config that will preserve metrics matching 'query'. For these metrics
+     * the tags in the 'tagsToDrop' parameter will be removed. Collisions will be handled by
+     * summing the values of the colliding metrics.
      *
-     * @param query      A string representing an atlas query. For example: <code>"name,ribbon,:re"</code>
-     * @param tagsToDrop List of tag keys to keep. For example: <code>ImmutableList.of("client", "status")</code>
+     * @param query      A string representing an atlas query.
+     *                   For example: <code>"name,ribbon,:re"</code>
+     * @param tagsToDrop List of tag keys to keep.
+     *                   For example: <code>ImmutableList.of("client", "status")</code>
      * @return A rollup config.
      */
     public static RollupConfig sumDroppingTags(String query, List<String> tagsToDrop) {
@@ -81,22 +87,23 @@ public class RollupConfig {
     /**
      * Create a rollup config from a JSON definition.
      *
-     * @param json A string representing a rollup config. For example: <code>[{"query": "name,sps,:eq", "rollup": [ "device", "deviceId" ]}]</code>
+     * @param json A string representing a rollup config.
+     *             For example: <code>[{"query": "name,sps,:eq", "rollup": [ "device", "deviceId" ]}]</code>
      * @return A rollup config.
      */
     public static RollupConfig create(String json) {
         ImmutableList.Builder<Rule> ruleBuilder = ImmutableList.builder();
         try {
-            JsonNode array = mapper.readTree(json);
+            JsonNode array = MAPPER.readTree(json);
             Preconditions.checkState(array.isArray(), "Invalid Policy: Expected an array of rules.");
             Iterator<JsonNode> rulesIterator = array.getElements();
             while (rulesIterator.hasNext()) {
                 JsonNode ruleNode = rulesIterator.next();
                 String queryStr = ruleNode.get("query").getTextValue();
                 JsonNode aggrNode = ruleNode.get("aggr");
-                RollupConfig.Aggr aggr = (aggrNode == null) ?
-                        Aggr.SUM :
-                        Aggr.valueOf(aggrNode.getTextValue().toUpperCase());
+                RollupConfig.Aggr aggr = (aggrNode == null)
+                        ? Aggr.SUM
+                        : Aggr.valueOf(aggrNode.getTextValue().toUpperCase());
 
                 List<String> tags = ImmutableList.of();
                 JsonNode rollupNode = ruleNode.get("rollup");

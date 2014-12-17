@@ -21,9 +21,10 @@ import com.netflix.servo.monitor.MonitorConfig;
 import java.util.Map;
 
 /**
- * A query that always succeeds
+ * A query that always succeeds.
  */
 public enum TrueQuery implements Query {
+    /** Singleton representing a query that always succeeds. */
     INSTANCE;
 
     @Override

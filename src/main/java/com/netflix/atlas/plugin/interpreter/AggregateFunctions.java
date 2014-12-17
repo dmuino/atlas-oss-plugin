@@ -27,7 +27,7 @@ final class AggregateFunctions {
         if (filter != FalseQuery.INSTANCE) {
             return new SumAf(filter);
         } else {
-            return ConstantExpression.NaN;
+            return ConstantExpression.NAN;
         }
     }
 
@@ -35,7 +35,7 @@ final class AggregateFunctions {
         if (filter != FalseQuery.INSTANCE) {
             return new MaxAf(filter);
         } else {
-            return ConstantExpression.NaN;
+            return ConstantExpression.NAN;
         }
     }
 
@@ -44,7 +44,7 @@ final class AggregateFunctions {
         if (filter != FalseQuery.INSTANCE) {
             return new AvgAf(filter);
         } else {
-            return ConstantExpression.NaN;
+            return ConstantExpression.NAN;
         }
     }
 
@@ -52,7 +52,7 @@ final class AggregateFunctions {
         if (filter != FalseQuery.INSTANCE) {
             return new CountAf(filter);
         } else {
-            return ConstantExpression.NaN;
+            return ConstantExpression.NAN;
         }
     }
 
@@ -61,7 +61,7 @@ final class AggregateFunctions {
         if (filter != FalseQuery.INSTANCE) {
             return new MinAf(filter);
         } else {
-            return ConstantExpression.NaN;
+            return ConstantExpression.NAN;
         }
     }
 }

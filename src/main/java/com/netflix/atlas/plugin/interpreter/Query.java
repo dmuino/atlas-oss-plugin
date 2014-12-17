@@ -21,7 +21,7 @@ import com.netflix.servo.monitor.MonitorConfig;
 import java.util.Map;
 
 /**
- * A query expression for a MonitorConfig
+ * A query expression for a {@link MonitorConfig}.
  */
 public interface Query extends Expression {
 

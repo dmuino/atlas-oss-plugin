@@ -27,14 +27,14 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * A ListValueExpression wrapping one or more ValueExpressions
+ * A {@link ListValueExpression} wrapping one or more {@link ValueExpression}s.
  */
 public final class MultipleExprList implements ListValueExpression {
     private static final List<String> KEYS = ImmutableList.of("label");
     private final List<Object> expressions;
 
     /**
-     * Create a MultipleExprList from a Collection of ValueExpression
+     * Create a MultipleExprList from a Collection of ValueExpression.
      */
     MultipleExprList(Collection<Object> expressions) {
         this.expressions = ImmutableList.copyOf(expressions);

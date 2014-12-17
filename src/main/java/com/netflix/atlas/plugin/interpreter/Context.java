@@ -37,13 +37,14 @@ import java.util.concurrent.TimeUnit;
  * An execution Context. This class is not thread safe.
  */
 public final class Context {
-    private static final Interpreter defaultInterpreter = new Interpreter(new AlertVocabulary());
+    private static final Interpreter DEFAULT_INTERPRETER = new Interpreter(new AlertVocabulary());
+    private static final int TTL = 15;
     private final Interpreter interpreter;
     private final Deque<Object> stack;
     private final Map<String, Object> vars = Maps.newHashMap();
     private final Map<String, String> commonTags;
     private final Cache<String, Object> state = CacheBuilder.newBuilder()
-            .expireAfterAccess(15, TimeUnit.MINUTES).build();
+            .expireAfterAccess(TTL, TimeUnit.MINUTES).build();
 
     /**
      * Create a context with an explicit set of commonTags.
@@ -65,7 +66,7 @@ public final class Context {
      * Get a reference to the default interpreter.
      */
     public static Interpreter getDefaultInterpreter() {
-        return defaultInterpreter;
+        return DEFAULT_INTERPRETER;
     }
 
     /**
@@ -150,6 +151,13 @@ public final class Context {
         return stack;
     }
 
+    /**
+     * Get the state stored under a given uuid.
+     * @param uuid A unique identifier used to fetch a particular object.
+     * @param valueLoader a {@link Callable} used to initialize the state the first time used.
+     * @return The current state for the given uuid, creating a new one if needed.
+     * @throws ExecutionException
+     */
     public Object getState(String uuid, Callable<?> valueLoader) throws ExecutionException {
         return state.get(uuid, valueLoader);
     }

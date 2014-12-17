@@ -46,7 +46,7 @@ import java.util.Map;
  * }
  * </pre>
  */
-public class AwsMetadata {
+public final class AwsMetadata {
 
     private static final URI METADATA_URI = URI.create(
             "http://instance-data/latest/dynamic/instance-identity/document");

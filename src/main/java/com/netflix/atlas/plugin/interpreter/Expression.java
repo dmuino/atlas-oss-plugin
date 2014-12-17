@@ -16,5 +16,8 @@
 
 package com.netflix.atlas.plugin.interpreter;
 
+/**
+ * An atlas expression.
+ */
 public interface Expression {
 }
