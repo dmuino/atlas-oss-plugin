@@ -138,6 +138,7 @@ public class AtlasPlugin {
 
         LOGGER.info("Starting to keep track of the cpu usage for threads in the jvm.");
         ThreadCpuStats.getInstance().start();
+        LOGGER.info("Atlas Plugin started.");
     }
 
     private void flushMetrics() {
