@@ -60,7 +60,7 @@
         <!-- Checks for Javadoc comments.                     -->
         <!-- See http://checkstyle.sf.net/config_javadoc.html -->
         <module name="JavadocMethod">
-          <property name="scope" value="package"/>
+            <property name="scope" value="public"/>
           <property name="allowMissingParamTags" value="true"/>
           <property name="allowMissingThrowsTags" value="true"/>
           <property name="allowMissingReturnTag" value="true"/>
@@ -69,10 +69,10 @@
           <property name="allowMissingPropertyJavadoc" value="true"/>
         </module>
         <module name="JavadocType">
-          <property name="scope" value="package"/>
+            <property name="scope" value="public"/>
         </module>
         <module name="JavadocVariable">
-          <property name="scope" value="package"/>
+            <property name="scope" value="public"/>
         </module>
         <module name="JavadocStyle">
           <property name="checkEmptyJavadoc" value="true"/>
@@ -155,6 +155,7 @@
         <module name="InnerAssignment"/>
         <module name="MagicNumber">
           <property name="severity" value="warning"/>
+            <property name="ignoreHashCodeMethod" value="true"/>
         </module>
         <module name="MissingSwitchDefault"/>
         <!-- Problem with finding exception types... -->

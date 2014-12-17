@@ -27,9 +27,8 @@ class AtlasMetricObserver extends BaseAtlasMetricObserver {
 
     @Override
     Observable<Integer> getSenderObservable(TagList tags, Metric[] batch) {
-        JsonPayload payload = new UpdateRequest(tags, batch, batch.length, stepMs);
-//        return RxHttp.postSmile("atlas_publish", config.getPublishUri(), payload)
-//                .map(withBookkeeping(batch.length));
-        return Observable.just(0);
+        JsonPayload payload = new UpdateRequest(tags, batch, batch.length, getStepMs());
+        return RxHttp.postSmile(getPluginConfig().getPublishUri(), payload)
+                .map(withBookkeeping(batch.length));
     }
 }

@@ -19,7 +19,8 @@
 // Checkstyle
 apply plugin: 'checkstyle'
 checkstyle {
-    ignoreFailures = true 
+    ignoreFailures = true
+    sourceSets = [rootProject.sourceSets.main]
     configFile = rootProject.file('codequality/checkstyle.xml')
 }
 

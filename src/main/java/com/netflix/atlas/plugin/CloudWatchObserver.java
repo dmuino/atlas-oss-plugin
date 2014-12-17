@@ -19,7 +19,6 @@ package com.netflix.atlas.plugin;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.services.cloudwatch.AmazonCloudWatchClient;
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.netflix.atlas.plugin.interpreter.Context;
@@ -50,8 +49,8 @@ public final class CloudWatchObserver implements MetricObserver {
     private final CloudWatchMetricObserver cloudWatchMetricObserver;
     private final String asgFromEnv = NetflixTagKey.tagsFromEnvironment().get(NetflixTagKey.ASG);
     private final String asg = Strings.isNotEmpty(asgFromEnv) ? asgFromEnv : "unknown";
-    @VisibleForTesting
-    final BasicTagList tags = BasicTagList.of("AutoScalingGroupName", asg);
+
+    private final BasicTagList tags = BasicTagList.of("AutoScalingGroupName", asg);
     private final AtomicInteger lastSent = Servo.getNumberGauge("atlas.cloudwatch.sent", new AtomicInteger(0));
     private final PushManager pushManager;
 

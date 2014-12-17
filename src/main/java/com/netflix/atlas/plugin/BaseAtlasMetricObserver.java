@@ -58,10 +58,11 @@ abstract class BaseAtlasMetricObserver implements MetricObserver {
     private static final Tag ATLAS_COUNTER_TAG = new BasicTag("atlas.dstype", "counter");
     private static final Tag ATLAS_GAUGE_TAG = new BasicTag("atlas.dstype", "gauge");
     private static final UpdateTasks NO_TASKS = new UpdateTasks(0, null, -1L);
-    protected final PluginConfig config;
-    protected final RollupPolicy rollupPolicy;
-    protected final long sendTimeoutMs; // in milliseconds
-    protected final long stepMs; // in milliseconds
+    private static final int HTTP_OK = 200;
+    private final PluginConfig config;
+    private final RollupPolicy rollupPolicy;
+    private final long sendTimeoutMs; // in milliseconds
+    private final long stepMs; // in milliseconds
     private final Counter numMetricsTotal = Monitors.newCounter("numMetricsTotal");
     private final Timer updateTimer = Monitors.newTimer("update");
     private final Counter pushSizeTotal = Monitors.newCounter("pushSize");
@@ -137,6 +138,20 @@ abstract class BaseAtlasMetricObserver implements MetricObserver {
         return result;
     }
 
+    /**
+     * Get the number of milliseconds for the step size.
+     */
+    protected long getStepMs() {
+        return stepMs;
+    }
+
+    /**
+     * Get the plugin config.
+     */
+    protected PluginConfig getPluginConfig() {
+        return config;
+    }
+
     private TagList createCommonTagListFromEnvironment() {
         return BasicTagList.copyOf(NetflixTagKey.tagsFromEnvironment());
     }
@@ -199,7 +214,7 @@ abstract class BaseAtlasMetricObserver implements MetricObserver {
         final Stopwatch s = updateTimer.start();
         int totalSent = 0;
         try {
-            totalSent = 0; //RxHttp.sendAll(updateTasks.tasks, updateTasks.numMetrics, sendTimeoutMs);
+            totalSent = RxHttp.sendAll(updateTasks.tasks, updateTasks.numMetrics, sendTimeoutMs);
             LOGGER.debug("Sent {}/{} metrics to atlas", totalSent, updateTasks.numMetrics);
         } finally {
             s.stop();
@@ -209,7 +224,7 @@ abstract class BaseAtlasMetricObserver implements MetricObserver {
     }
 
     protected boolean shouldIncludeMetric(Metric metric) {
-        return true;
+        return metric.hasNumberValue();
     }
 
     /**
@@ -280,7 +295,7 @@ abstract class BaseAtlasMetricObserver implements MetricObserver {
         return new Func1<HttpClientResponse<ByteBuf>, Integer>() {
             @Override
             public Integer call(HttpClientResponse<ByteBuf> response) {
-                boolean ok = response.getStatus().code() == 200;
+                boolean ok = response.getStatus().code() == HTTP_OK;
                 if (ok) {
                     numMetricsSent.increment(batchSize);
                 } else {

@@ -20,21 +20,65 @@ import com.netflix.atlas.plugin.interpreter.Query;
 
 import java.util.concurrent.Callable;
 
-interface PluginConfig extends RollupConfigurator {
+/**
+ * Defines the configuration options that are available for the plugin.
+ */
+public interface PluginConfig extends RollupConfigurator {
+    /**
+     * Returns true if the plugin is enabled, i.e., it should be collecting
+     * metrics each minute.
+     */
     boolean isEnabled();
 
+    /**
+     * Whether to write metrics to local files.
+     */
     boolean isFileMetricsEnabled();
 
+    /**
+     * Directory where to store metric dumps.
+     */
     String getMetricsDir();
 
+    /**
+     * Whether to forward atlas metrics to CloudWatch.
+     */
     boolean isCloudwatchEnabled();
 
+    /**
+     * Push queue size.
+     */
     int getPushQueueSize();
+
+    /**
+     * The URI to use for publishing metrics to Atlas.
+     */
     String getPublishUri();
+
+    /**
+     * Number of metrics to send in one batch.
+     */
     int getBatchSize();
+
+    /**
+     * Filter expression to restrict the set of metrics that are published.
+     */
     Callable<Query> getFilterExpr();
 
+    /**
+     * Atlas Expression used to compute cloudwatch metrics. For example: <br/><br/>
+     * {@code
+     * name, logQueueSize,:eq,:sum,logQueueSize,:legend
+     * }
+     * <br/><br/>
+     * will send a single logQueueSize metric to cloudwatch using the sum of all metrics
+     * that have that name.
+     */
     String getCloudwatchExpr();
 
+
+    /**
+     * Namespace to use when publishing metrics to cloudwatch.
+     */
     String getCloudwatchNamespace();
 }
