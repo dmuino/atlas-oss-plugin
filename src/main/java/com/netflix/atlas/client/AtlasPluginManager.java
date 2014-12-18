@@ -19,14 +19,17 @@ package com.netflix.atlas.client;
 /**
  * The Atlas Plugin Manager. Responsible for initializing and terminating the {@link AtlasPlugin}.
  */
-public class AtlasPluginManager {
+public enum AtlasPluginManager {
+    /** The AtlasPluginManager instance. */
+    INSTANCE;
+
     private final AtlasPlugin plugin;
 
     /**
      * Create a new manager for initializing and terminating the atlas plugin
      * using dynamic properties to drive its configuration.
      */
-    public AtlasPluginManager() {
+    AtlasPluginManager() {
         PluginConfig config = new DynamicPluginConfig();
         plugin = new AtlasPlugin(config);
     }

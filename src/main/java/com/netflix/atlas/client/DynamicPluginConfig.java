@@ -57,7 +57,7 @@ public class DynamicPluginConfig implements PluginConfig {
     private static final RollupConfigProperty ROLLUP_CONFIG =
             new RollupConfigProperty(PREFIX + "rollupConfig", null);
     private static final DynamicStringProperty PUBLISH_URI =
-            PROP_FACTORY.getStringProperty(PREFIX + "fastPublishUri",
+            PROP_FACTORY.getStringProperty(PREFIX + "publishUri",
                     "http://atlas.example.org/api/v1/publish-fast");
 
     @Override
