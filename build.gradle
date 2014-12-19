@@ -17,7 +17,7 @@
 
 
 // Establish version and status
-ext.githubProjectName = 'atlas-plugin'
+ext.githubProjectName = 'atlas-oss-plugin'
 group = "com.netflix.atlas.client"
 
 buildscript {
